@@ -1,0 +1,24 @@
+@font-face {
+    font-family: 'Fregat';
+    src: local('Fregat'), url('fregat.woff2') format('woff2'), url('fregat.woff') format('woff'), url('fregat.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Fregat';
+    src: local('Fregat Italic'), local('Fregat-Italic'), url('fregatitalic.woff2') format('woff2'), url('fregatitalic.woff') format('woff'), url('fregatitalic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Fregat';
+    src: local('Fregat Bold'), local('Fregat-Bold'), url('fregatbold.woff2') format('woff2'), url('fregatbold.woff') format('woff'), url('fregatbold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Fregat';
+    src: local('Fregat Bold Italic'), local('Fregat-BoldItalic'), url('fregatbolditalic.woff2') format('woff2'), url('fregatbolditalic.woff') format('woff'), url('fregatbolditalic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
+}

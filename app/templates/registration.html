@@ -1,0 +1,160 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/css/style.min.css">
+
+    <script async src="../static/js/app.min.js"></script>
+
+</head>
+<body class="win">
+<!--[if lt IE 8]>
+<p class="browserupgrade">Ysou are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<div class="container header-block">
+    <nav class="navbar navbar-toggleable-md navbar-light">
+        <a class="navbar-brand" href="/">
+            <img src="../static/img/logo-header.png" width="120" class="d-inline-block align-top" alt="">
+        </a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse mx-auto" id="navbarNav">
+            <nav class="nav nav-masthead mx-auto flex-column flex-sm-row">
+                <li class="nav-item px-2">
+                    <a class="nav-link flex-sm-fill text-sm-center" href="/">Головна <span class="sr-only">(current)</span></a>
+                </li>
+                <img class="line-break" src="../static/img/line.png" height="47">
+                <li class="nav-item px-2">
+                    <a class="nav-link flex-sm-fill text-sm-center" href="/rules">Правила</a>
+                </li>
+                <img class="line-break" src="../static/img/line.png" height="47">
+                <li class="nav-item px-2">
+                    <a class="nav-link flex-sm-fill text-sm-center active" href="/registration">Реєстрація</a>
+                </li>
+                <img class="line-break" src="../static/img/line.png" height="47">
+                <li class="nav-item px-2">
+                    <a class="nav-link flex-sm-fill text-sm-center" href="/win">Переможці</a>
+                </li>
+            </nav>
+            <!--<nav class="nav lang">
+                <li class="breadcrumb-item active">УКР</li>
+                <li class="breadcrumb-item"><a href="#">РУС</a></li>
+                <li class="breadcrumb-item"><a href="">ENG</a></li>
+            </nav>-->
+        </div>
+    </nav>
+</div>
+
+<div class="container-full">
+    <!-- Example row of columns -->
+    <div class="col-lg-4 col-lg-offset-6" style="padding-top: 50px; margin: 0px auto;">
+
+        <form action="#" method="post" id="reg-form">
+            <h2 class="text-uppercase">Реєстрація</h2>
+            <div class="form-group">
+                <label for="inputName">Iм'я:</label>
+                <input type="text" class="form-control" id="inputName" required>
+            </div>
+            <div class="form-group">
+                <label for="inputBirth">Дата народження:</label>
+                <input type="text" class="form-control" id="inputBirth" name="birthdate" required>
+            </div>
+            <div class="form-group">
+                <label for="inputPhone">Телефон:</label>
+                <input type="text" class="form-control" id="inputPhone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="inputCity">Місто:</label>
+                <input type="text" class="form-control" id="inputCity" name="city" required>
+            </div>
+            <div class="">
+                <label for="inputCode">Код:</label>
+                <input type="text" class="form-control" id="inputCode" aria-describedby="codeHelp" name="code" required>
+                <!--<small id="codeHelp" class="form-text text-muted">Дата та точний час купівлі вказані на чеку. Наприклад вказана дата: 14 квітня 2017 року о 15:42 необхідно набрати як "14041142"</small>-->
+            </div>
+            <div class="form-check">
+                <label class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" name="isread" required>
+                    <span class="custom-control-indicator"></span>
+                    <small class="form-text text-muted agree-text custom-control-description">Ознайомився та погоджуюсь з Правилами акції та умовами передачі та обробки моїх персональних данних</small>
+                </label>
+            </div>
+            <div class="row justify-content-center reg-btn">
+                <button type="submit" class="btn btn-success btn-lg" >Зареєструвати</button>
+            </div>
+
+        </form>
+
+    </div>
+
+    <div class="jumbotron winners questions">
+
+        <h3>Запитання та відповіді</h3>
+        <div class="media">
+            <div class="media-left">
+                <img class="media-object" src="../static/img/dialog.png" alt="...">
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">Скільки кодів можна реєструвати за 1 день?</h4>
+                Щодня ви можете реєструвати необмежену кількість кодів. Будьте уважні, при введенні 5 помилкових акційних кодів, в цілях безпеки доступ до сайту буде закритий на 24 години.
+            </div>
+        </div>
+        <div class="media">
+            <div class="media-left">
+                <img class="media-object" src="../static/img/dialog.png" alt="...">
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">Як я дізнаюсь що код успішно зареєстровано?</h4>
+                Якщо акційний код успішно зареєстровано – Ви побачите повідомлення на сайті і отримаєте SMS-повідомлення на вказаний номер телефону. Якщо на сайті зявилось повідомлення про успішну реєстрацію, а SMS ви не отримали, будь-ласка, зверніться на гарючу лінію, щоб перевірити чи правильно вказаний вашо номер телефону.
+            </div>
+        </div>
+        <div class="media">
+            <div class="media-left">
+                <img class="media-object" src="../static/img/dialog.png" alt="...">
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">З ким зв'язатись з приводу інших запитань?</h4>
+                Для отримання відповіді на інші запитання зверніться за телефоном гарячої лінії 0-800-210-720. Гаряча лінія працює згідно наступного графіку: у будні з 09:00 до 18:00. Дзвінки безкоштовні з усіх номерів фіксованих та мобільних мереж операторів зв’язку України.
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-lg-offset-6" style="margin: 0px auto;">
+        <form action="#" method="post" id="send-form">
+            <div class="form-group">
+                <label for="inputEmail">e-mail</label>
+                <input type="email" class="form-control" id="inputEmail" required>
+            </div>
+            <div class="form-group">
+                <label for="textQuestion">Ваше запитання:</label>
+                <textarea type="email" class="form-control" id="textQuestion" rows="3" required></textarea>
+            </div>
+            <div class="row justify-content-center reg-btn">
+                <button type="submit" class="btn btn-success btn-lg" >Відправити</button>
+            </div>
+        </form>
+    </div>
+
+    <footer>
+        <div class="foo-text">
+            Акція проводиться з 18 вересня по 29 жовтня 2017 року на території України, окрім тимчасово окупованої АРК та зони проведення АТО. Щоб стати учасником акції, у період її проведення треба придбати продукцію "Лактонія кефірна" вагою 900 г або 300 г, знайти під захисним покриттям на її етикетці акційний код і зареєструвати його на сайті www.promo-lactonia.com.ua. Учасники акції мають можливість отримати подарунки за результатами розіграшу їх серед усіх учасників: щодня — поповнення рахунку мобільного телефону, щотижня — велосипед. Про результати чергового розіграшу учасникам буде повідомлятися через SMS. Детальні умови на www.promo-lactonia.com.ua або за телефоном гарячої лінії 0-800-210-720 (у будні з 09:00 до 18:00). Дзвінки безкоштовні з усіх номерів фіксованих та мобільних мереж операторів зв’язку України.
+        </div>
+    </footer>
+</div>
+</body>
+</html>
