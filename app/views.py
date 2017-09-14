@@ -38,8 +38,10 @@ def registration(request):
 
         codeObj = Codes.objects.get(code__exact=inputCode)
 
-        user = Users(name=inputName, birth_date=birthDate, phone_number=phoneNumber, city=city, code=codeObj)
-        user.save()
+        userModel = Users(name=inputName, birth_date=birthDate, phone_number=phoneNumber, city=city, code=codeObj)
+        userModel.code.is_used = True
+        print(userModel.code.is_used)
+        userModel.save()
 
     return render(request, 'registration.html', {'question': 'Hello'})
 
