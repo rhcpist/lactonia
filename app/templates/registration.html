@@ -63,12 +63,12 @@
 <div class="container-full">
     <!-- Example row of columns -->
     <div class="col-lg-4 col-lg-offset-6" style="padding-top: 50px; margin: 0px auto;">
-
         <form action="#" method="post" id="reg-form">
+            {% csrf_token %}
             <h2 class="text-uppercase">Реєстрація</h2>
             <div class="form-group">
                 <label for="inputName">Iм'я:</label>
-                <input type="text" class="form-control" id="inputName" required>
+                <input type="text" class="form-control" id="inputName" name="inputname" required>
             </div>
             <div class="form-group">
                 <label for="inputBirth">Дата народження:</label>
@@ -89,13 +89,35 @@
             </div>
             <div class="form-check">
                 <label class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" name="isread" required>
+                    <input type="checkbox" class="custom-control-input" name="isread" id="isread" required>
                     <span class="custom-control-indicator"></span>
                     <small class="form-text text-muted agree-text custom-control-description">Ознайомився та погоджуюсь з Правилами акції та умовами передачі та обробки моїх персональних данних</small>
                 </label>
             </div>
             <div class="row justify-content-center reg-btn">
-                <button type="submit" class="btn btn-success btn-lg" >Зареєструвати</button>
+                <button id="data-submit" type="submit" class="btn btn-success btn-lg">Зареєструвати</button>
+                <!--<button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#dataModal">Зареєструвати</button>-->
+
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="dataModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <!--<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>-->
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="message-text"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" data-dismiss="modal">Закрити вікно</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </form>
@@ -156,5 +178,44 @@
         </div>
     </footer>
 </div>
+<script type="text/javascript">
+    window.onload = function() {
+        if ( $( 'input[name="birthdate"]' ).length != 0 ) {
+            $("#data-submit").on('click', function(e){
+                if ($("#inputName").val().length > 0 && $("#inputBirth").val().length > 0 && $("#inputPhone").val().length > 0 && $("#inputCity").val().length > 0 && $("#inputCode").val().length > 0 && $("#isread").is(":checked") ) {
+                    $('#dataModal').modal('toggle');
+                    e.preventDefault();
+                }
+            });
+
+            $('#dataModal').on('hidden.bs.modal', function (e) {
+                $("#reg-form").submit();
+            });
+
+
+
+
+            $('#inputCode').change(function () {
+               if ($('#inputCode').val().length == 9) {
+                    $.ajax({
+                        url: "/registration/send_code",
+                        type : "POST",
+                        data : { code : $('#inputCode').val() },
+
+                        success : function(json) {
+                            console.log(json);
+                            $(".message-text").text(json['message']);
+                        },
+
+                        error : function(xhr,errmsg,err) {
+                            console.log("error");
+                        }
+                    });
+               }
+            });
+
+        }
+    };
+</script>
 </body>
 </html>

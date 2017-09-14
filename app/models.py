@@ -12,7 +12,7 @@ class Blocklist(models.Model):
 
 class Codes(models.Model):
     sms_id = models.CharField(max_length=64, default=None)
-    code = models.CharField(max_length=64)
+    code = models.CharField(max_length=64, db_index=True)
     is_used = models.BooleanField(default=False)
 
     def __str__(self):
