@@ -19,6 +19,20 @@
 
     <script async src="../static/js/app.min.js"></script>
 
+    <style>
+        .custom-control-input:checked ~ .custom-control-indicator {
+            color: #fff;
+            background-color: #96cd3e!important;
+        }
+
+        .custom-control-indicator {
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
+            transition: border-color ease-in-out 0.15s,box-shadow ease-in-out 0.15s;
+            background-clip: padding-box;
+        }
+    </style>
+
 </head>
 <body class="win">
 <!--[if lt IE 8]>
@@ -90,7 +104,7 @@
             <div class="form-check">
                 <label class="custom-control custom-checkbox">
                     <input type="checkbox" class="custom-control-input" name="isread" id="isread" required>
-                    <span class="custom-control-indicator"></span>
+                    <span class="custom-control-indicator" ></span>
                     <small class="form-text text-muted agree-text custom-control-description">Ознайомився та погоджуюсь з Правилами акції та умовами передачі та обробки моїх персональних данних</small>
                 </label>
             </div>
@@ -200,7 +214,7 @@
                     $.ajax({
                         url: "/registration/send_code",
                         type : "POST",
-                        data : { code : $('#inputCode').val() },
+                        data : { code : $('#inputCode').val(), number : $('#inputPhone').val(), },
 
                         success : function(json) {
                             console.log(json);

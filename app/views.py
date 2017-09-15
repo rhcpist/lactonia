@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, timedelta
+import re
 from .tasks import send_sms
 
 from .models import Blocklist
@@ -35,7 +36,10 @@ def rules(request):
 
 def registration(request):
     if request.method == "POST":
-        # send_sms('380636994338')
+
+        # if request.META.get('HTTP_X_REAL_IP') != "213.108.73.83" :
+        #     print('Not begin')
+        #     return render(request, 'registration.html', {'alarm': 'Акція розпочнеться з 18 вересня. Збережіть код та зареєструйте його пізніше.'})
 
         inputName = str(request.POST.get('inputname'))
         birthDate = str(request.POST.get('birthdate'))
@@ -43,44 +47,65 @@ def registration(request):
         city = str(request.POST.get('city'))
         inputCode = str(request.POST.get('code'))
 
+        userModel = Users(
+            name=inputName,
+            birth_date=birthDate,
+            phone_number=phoneNumber,
+            city=city,
+            code=None,
+            status=None
+        )
+        #userModel.status = Messages.objects.get(id__exact=1)
+        userModel.save()
+
+        blockList = Blocklist(phone_number=phoneNumber, count=0)
+        blockList.user = userModel
+        try:
+            blockList = Blocklist.objects.get(phone_number__exact=phoneNumber)
+        except ObjectDoesNotExist:
+            pass
+
+        try:
+            if blockList.is_block == True and blockList.date_block <= datetime.now() - timedelta(days=1):
+                blockList.is_block = False
+                blockList.count = 0
+                blockList.save()
+
+            if blockList.is_block == True:
+
+                userModel.status = Messages.objects.get(id__exact=4)
+
+                userModel.save()
+                blockList.save()
+
+                return render(request, 'registration.html', {'question': 'Заблокованый'})
+
+        except ObjectDoesNotExist:
+            pass
+
         try:
             codeObj = Codes.objects.get(code__exact=inputCode, is_used__exact=False)
-            userModel = Users(name=inputName, birth_date=birthDate, phone_number=phoneNumber, city=city, code=codeObj)
+
             codeObj.is_used = True
-            userModel.code = codeObj
-            userModel.status = Messages.objects.get(id__exact=2)
-            userModel.save()
             codeObj.user = userModel
             codeObj.save()
 
+            userModel.code = codeObj
+            userModel.status = Messages.objects.get(id__exact=2)
+            #send sms
+            print(send_sms(str(userModel.phone_number)))
+
+            userModel.save()
+
         except ObjectDoesNotExist:
-            userModel = Users(name=inputName, birth_date=birthDate, phone_number=phoneNumber, city=city, code=None)
-            try:
-                blockList = Blocklist.objects.get(phone_number__exact=phoneNumber)
-                if blockList.is_block == True:
-                    if blockList.date_block <= datetime.now() - timedelta(days=1):
-                        blockList.is_block = False
-                    return render(request, 'registration.html', {'question': 'Hello'})
-                elif blockList.count == 5:
-                    blockList.count = 0
-                    blockList.date_block = datetime.now()
-                    blockList.is_block = True
-                    userModel = Users(name=inputName, birth_date=birthDate, phone_number=phoneNumber, city=city, code=None)
-                    userModel.status = Messages.objects.get(id__exact=4)
-                    userModel.save()
-                else:
-                    blockList.date_block = datetime.now()
-                    blockList.count += 1
-                    userModel = Users(name=inputName, birth_date=birthDate, phone_number=phoneNumber, city=city, code=None)
-                    userModel.status = Messages.objects.get(id__exact=1)
-                    userModel.save()
-            except ObjectDoesNotExist:
-                userModel = Users(name=inputName, birth_date=birthDate, phone_number=phoneNumber, city=city, code=None)
-                userModel.status = Messages.objects.get(id__exact=1)
-                userModel.save()
-                blockList = Blocklist(phone_number=phoneNumber, count=1)
-            blockList.user = userModel
+            userModel.status = Messages.objects.get(id__exact=1)
+            userModel.save()
+            blockList.count = blockList.count + 1
+            if blockList.count > 4 : blockList.is_block = True
             blockList.save()
+            return render(request, 'registration.html', {'question': 'Невирный код support@lactoria.ua'})
+
+
     return render(request, 'registration.html', {'question': 'Hello'})
 
 
@@ -88,22 +113,76 @@ def registration(request):
 def send_code(request):
     if request.method == "POST":
         inputCode = str(request.POST.get('code'))
-        if len(inputCode) == 9:
-            try:
-                codeObj = Codes.objects.get(code__exact=inputCode)
-                if codeObj.is_used == False:
-                    return HttpResponse(json.dumps({"is_valid": True,
-                                                    "message": Messages.objects.values_list('message', flat=True).filter(pk=2)[0]}),
-                                        content_type='application/json')
-                else:
-                    # try:
-                    #     blockList = Blocklist.objects.get(is_block__exact=True)
-                    # except ObjectDoesNotExist:
-                    #     pass
-                    return HttpResponse(json.dumps(
-                        {"is_valid": False, "message": Messages.objects.values_list('message', flat=True).filter(pk=3)[0]}),
-                                        content_type='application/json')
-            except ObjectDoesNotExist:
-                return HttpResponse(json.dumps({"is_valid": False,
-                                                "message": Messages.objects.values_list('message', flat=True).filter(pk=1)[0]}),
-                                    content_type='application/json')
+        inputNumber = str(request.POST.get('number'))
+        formatedNum = re.findall('\d+', inputNumber)
+        formatedNum = ''.join(formatedNum)
+
+        blockObj = Blocklist(phone_number=formatedNum,count=0)
+        try:
+            blockObj = Blocklist.objects.get(phone_number__exact=formatedNum)
+        except ObjectDoesNotExist:
+            pass
+
+        if blockObj.is_block == True:
+            print('Blocked')
+            return HttpResponse(
+                json.dumps(
+                    {
+                        "is_valid": False,
+                        "message": Messages.objects.values_list('message', flat=True).filter(pk=4)[0]
+                    }
+                ),
+                content_type='application/json'
+            )
+        if len(inputCode) != 9 :
+            return HttpResponse(
+                json.dumps(
+                    {
+                        "is_valid": False,
+                        "message": Messages.objects.values_list('message', flat=True).filter(pk=1)[0]
+                    }
+                ),
+                content_type='application/json'
+            )
+
+        try:
+            codeObj = Codes.objects.get(code__exact=inputCode)
+            if codeObj.is_used == True:
+                return HttpResponse(
+                    json.dumps(
+                        {
+                            "is_valid": False,
+                            "message": Messages.objects.values_list('message', flat=True).filter(pk=3)[0]
+                        }
+                    ),
+                    content_type='application/json'
+                )
+
+            return HttpResponse(
+                json.dumps(
+                    {
+                        "is_valid": False,
+                        "message": Messages.objects.values_list('message', flat=True).filter(pk=2)[0]
+                    }
+                ),
+                content_type='application/json'
+            )
+        except ObjectDoesNotExist:
+            return HttpResponse(
+                json.dumps(
+                    {
+                        "is_valid": False,
+                        "message": Messages.objects.values_list('message', flat=True).filter(pk=1)[0]
+                    }
+                ),
+                content_type='application/json'
+            )
+    return HttpResponse(
+        json.dumps(
+            {
+                "is_valid": False,
+                "message": Messages.objects.values_list('message', flat=True).filter(pk=1)[0]
+            }
+        ),
+        content_type='application/json'
+    )
