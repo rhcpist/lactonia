@@ -25,7 +25,7 @@ SECRET_KEY = 'k%jns6qg@ak48$4+#tg233@!n=!%tnlu8!-61&c82oi*czm(ex'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.98.246.177']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -80,13 +80,21 @@ DATABASES = {
     #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     # }
     'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'lactonia',
-            'USER': 'lactonia',
-            'PASSWORD': '',
-            'HOST': 'localhost',
-            'PORT': '5432',
-        }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'interactive_lactonia',
+        'USER': 'interactive_lactonia',
+        'PASSWORD': 'k5o07edKbKcR2hFG',
+        'HOST': 'postgres.3.s98',
+        'PORT': '5432',
+    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'lactonia',
+    #     'USER': 'lactonia',
+    #     'PASSWORD': '',
+    #     'HOST': 'localhost',
+    #     'PORT': '5432',
+    # }
 }
 
 
@@ -128,3 +136,11 @@ DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_PASSWORD = 'promolactonia18092910' #my gmail password
+EMAIL_HOST_USER = 'promolactonia@gmail.com' #my gmail username
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

@@ -38,5 +38,8 @@ class Users(models.Model):
     def __str__(self):
         return self.name
 
+    def status_code(self):
+        return self.status
+
 class Messages(models.Model):
     message = models.CharField(max_length=512)

@@ -5,6 +5,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, timedelta
+from django.core.mail import EmailMessage
+from celery import shared_task
+from django.shortcuts import redirect
 import re
 from .tasks import send_sms
 
@@ -36,10 +39,6 @@ def rules(request):
 
 def registration(request):
     if request.method == "POST":
-
-        # if request.META.get('HTTP_X_REAL_IP') != "213.108.73.83" :
-        #     print('Not begin')
-        #     return render(request, 'registration.html', {'alarm': 'Акція розпочнеться з 18 вересня. Збережіть код та зареєструйте його пізніше.'})
 
         inputName = str(request.POST.get('inputname'))
         birthDate = str(request.POST.get('birthdate'))
@@ -186,3 +185,29 @@ def send_code(request):
         ),
         content_type='application/json'
     )
+
+
+@shared_task
+def send_mail(request):
+    if request.method == "POST" and request.POST.get('inputEmail') and request.POST.get('textQuestion'):
+        contact_email = request.POST.get('inputEmail')
+        form_content = request.POST.get('textQuestion')
+        #print(contact_email + ' ' + form_content)
+        template = loader.get_template('contact_template.txt')
+
+        context = {
+            'contact_email': contact_email,
+            'form_content': form_content,
+        }
+        content = template.render(context)
+
+        email = EmailMessage(
+            "Новое сообщение с обратной связи Lactonia",
+            content,
+            "From Lactonia Promo",
+            ['promolactonia@gmail.com'],
+            headers={'Reply-To': contact_email}
+        )
+
+        email.send()
+    return HttpResponseRedirect('/registration')

@@ -77,7 +77,7 @@
 <div class="container-full">
     <!-- Example row of columns -->
     <div class="col-lg-4 col-lg-offset-6" style="padding-top: 50px; margin: 0px auto;">
-        <form action="#" method="post" id="reg-form">
+        <form action="." method="post" id="reg-form">
             {% csrf_token %}
             <h2 class="text-uppercase">Реєстрація</h2>
             <div class="form-group">
@@ -134,6 +134,27 @@
                 </div>
             </div>
 
+	    <!-- Alert Modal - Promo not begin-->
+            <div class="modal fade" id="dataAlert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabe2" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content" style="text-align: center;">
+                        <div class="modal-header">
+                            <!--<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>-->
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h3 class="text-uppercase">Увага!</h3>
+                            <p class="message-text">Акція розпочнеться з 18 вересня. Збережіть код та зареєструйте його пізніше.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" data-dismiss="modal">Закрити вікно</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </form>
 
     </div>
@@ -171,14 +192,15 @@
     </div>
 
     <div class="col-lg-4 col-lg-offset-6" style="margin: 0px auto;">
-        <form action="#" method="post" id="send-form">
+        <form action="/registration/send_mail" method="post" id="send-mail">
+            {% csrf_token %}
             <div class="form-group">
                 <label for="inputEmail">e-mail</label>
-                <input type="email" class="form-control" id="inputEmail" required>
+                <input type="email" class="form-control" id="inputEmail" name="inputEmail" required>
             </div>
             <div class="form-group">
                 <label for="textQuestion">Ваше запитання:</label>
-                <textarea type="email" class="form-control" id="textQuestion" rows="3" required></textarea>
+                <textarea type="email" class="form-control" id="textQuestion" name="textQuestion" rows="3" required></textarea>
             </div>
             <div class="row justify-content-center reg-btn">
                 <button type="submit" class="btn btn-success btn-lg" >Відправити</button>
@@ -194,6 +216,10 @@
 </div>
 <script type="text/javascript">
     window.onload = function() {
+	// Modal Popup window - Promo not begin
+	// setTimeout(function(){ $('#dataAlert').modal('toggle'); }, 3000);
+
+	// Check if page of registration
         if ( $( 'input[name="birthdate"]' ).length != 0 ) {
             $("#data-submit").on('click', function(e){
                 if ($("#inputName").val().length > 0 && $("#inputBirth").val().length > 0 && $("#inputPhone").val().length > 0 && $("#inputCity").val().length > 0 && $("#inputCode").val().length > 0 && $("#isread").is(":checked") ) {
