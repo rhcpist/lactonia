@@ -81,11 +81,11 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'interactive_lactonia',
-        'USER': 'interactive_lactonia',
-        'PASSWORD': 'k5o07edKbKcR2hFG',
-        'HOST': 'postgres.3.s98',
-        'PORT': '5432',
+        'NAME': 'xxxxxx',
+        'USER': 'xxxxxx',
+        'PASSWORD': 'xxxxxx',
+        'HOST': 'xxxxxx',
+        'PORT': 'xxxxxx',
     }
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -140,7 +140,7 @@ STATIC_URL = '/static/'
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_PASSWORD = 'promolactonia18092910' #my gmail password
-EMAIL_HOST_USER = 'promolactonia@gmail.com' #my gmail username
+EMAIL_HOST_PASSWORD = 'xxxxx' #my gmail password
+EMAIL_HOST_USER = 'xxxxx' #my gmail username
 EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
