@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'app.apps.AppConfig',
+    'rangefilter',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -81,11 +82,11 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'xxxxxx',
-        'USER': 'xxxxxx',
-        'PASSWORD': 'xxxxxx',
-        'HOST': 'xxxxxx',
-        'PORT': 'xxxxxx',
+        'NAME': 'xxxxxxxxx',
+        'USER': 'xxxxxxxxx',
+        'PASSWORD': 'xxxxxxxxx',
+        'HOST': 'xxxxxxxxx',
+        'PORT': 'xxxxxxxxx',
     }
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -140,7 +141,7 @@ STATIC_URL = '/static/'
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_PASSWORD = 'xxxxx' #my gmail password
-EMAIL_HOST_USER = 'xxxxx' #my gmail username
+EMAIL_HOST_PASSWORD = 'xxxxxxxxx' #my gmail password
+EMAIL_HOST_USER = 'xxxxxxxxx' #my gmail username
 EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

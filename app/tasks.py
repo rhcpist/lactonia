@@ -1,13 +1,13 @@
 from __future__ import absolute_import, unicode_literals
+from datetime import timedelta
 from celery import shared_task
+from celery import current_app
 import base64
 import http.client
-
 
 @shared_task
 def add(x, y):
     return x + y
-
 
 @shared_task
 def mul(x, y):
@@ -17,6 +17,7 @@ def mul(x, y):
 @shared_task
 def xsum(numbers):
     return sum(numbers)
+
 
 @shared_task
 def send_sms(number):
@@ -35,3 +36,4 @@ def send_sms(number):
         print(err)
     resp = conn.getresponse()
     return resp.read()
+

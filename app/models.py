@@ -43,3 +43,4 @@ class Users(models.Model):
 
 class Messages(models.Model):
     message = models.CharField(max_length=512)
+    status = models.CharField(max_length=32, null=True)

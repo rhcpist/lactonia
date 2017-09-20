@@ -24,7 +24,7 @@ def index(request):
 def win(request):
     template = loader.get_template('win.html')
     context = {
-        'param': 'Hello',
+        'winners': 'Hello',
     }
     return HttpResponse(template.render(context, request))
 

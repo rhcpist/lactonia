@@ -32,6 +32,14 @@
             background-clip: padding-box;
         }
     </style>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-KD7KMX4');
+    </script>
+    <!-- End Google Tag Manager -->
 
 </head>
 <body class="win">
@@ -214,6 +222,16 @@
         </div>
     </footer>
 </div>
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106638262-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-106638262-1');
+</script>
+<!--End-->
 <script type="text/javascript">
     window.onload = function() {
 	// Modal Popup window - Promo not begin
@@ -221,6 +239,24 @@
 
 	// Check if page of registration
         if ( $( 'input[name="birthdate"]' ).length != 0 ) {
+
+
+            $(function() {
+                $('input[name="birthdate"]').daterangepicker({
+                    locale: {
+                        format: 'YYYY-MM-DD'
+                    },
+                    singleDatePicker: true,
+                    showDropdowns: true,
+                    autoUpdateInput: false,
+                    "maxDate": moment().subtract(18, 'y').format('YYYY-MM-DD'),
+                    "minDate": moment().subtract(117, 'y').format('YYYY-MM-DD'),
+                },  function(chosen_date) {
+                        $('input[name="birthdate"]').val(chosen_date.format('YYYY-MM-DD'));
+                    });
+            });
+
+
             $("#data-submit").on('click', function(e){
                 if ($("#inputName").val().length > 0 && $("#inputBirth").val().length > 0 && $("#inputPhone").val().length > 0 && $("#inputCity").val().length > 0 && $("#inputCode").val().length > 0 && $("#isread").is(":checked") ) {
                     $('#dataModal').modal('toggle');
@@ -257,5 +293,9 @@
         }
     };
 </script>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KD7KMX4"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 </body>
 </html>
