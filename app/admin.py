@@ -31,7 +31,7 @@ class UsersAdmin(admin.ModelAdmin):
 
     list_display = (('name', 'phone_number', 'birth_date', 'city', 'code', 'date_registration', 'status_message'))
     # define which columns displayed in changelist))
-    readonly_fields = ['name', 'phone_number', 'birth_date', 'city', 'code', 'date_registration', 'status_message']
+    readonly_fields = ['name', 'birth_date', 'city', 'code', 'date_registration', 'status_message']
     # add filtering by date
     list_filter = (
         'status_id__status',

@@ -1,9 +1,13 @@
 from __future__ import absolute_import, unicode_literals
 from datetime import timedelta
 from celery import shared_task
-from celery import current_app
+from celery import current_app as app
+from celery.schedules import crontab
 import base64
 import http.client
+
+from matplotlib.dates import seconds
+
 
 @shared_task
 def add(x, y):
@@ -18,6 +22,19 @@ def mul(x, y):
 def xsum(numbers):
     return sum(numbers)
 
+
+@app.on_after_finalize.connect
+def setup_periodic_tasks(sender, **kwargs):
+    # Calls test('hello') every 10 seconds.
+    sender.add_periodic_task(
+        crontab(hour=16, minute=46),
+        select_winners.s('380636994338'),
+        name = 'select winners'
+    )
+
+@app.task
+def select_winners(arg):
+    return arg
 
 @shared_task
 def send_sms(number):
