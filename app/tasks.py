@@ -9,9 +9,9 @@ import http.client
 from matplotlib.dates import seconds
 
 
-@shared_task
+@app.task
 def add(x, y):
-    return x + y
+    return str(x + y)
 
 @shared_task
 def mul(x, y):
@@ -23,16 +23,16 @@ def xsum(numbers):
     return sum(numbers)
 
 
-@app.on_after_finalize.connect
-def setup_periodic_tasks(sender, **kwargs):
-    # Calls test('hello') every 10 seconds.
-    sender.add_periodic_task(
-        crontab(hour=16, minute=46),
-        select_winners.s('380636994338'),
-        name = 'select winners'
-    )
+# @app.on_after_finalize.connect
+# def setup_periodic_tasks(sender, **kwargs):
+#     # Calls test('hello') every 10 seconds.
+#     sender.add_periodic_task(
+#         crontab(hour=15, minute=38),
+#         select_winners.s('380636994338'),
+#         name = 'select winners',
+#     )
 
-@app.task
+@shared_task
 def select_winners(arg):
     return arg
 

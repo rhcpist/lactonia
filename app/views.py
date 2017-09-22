@@ -23,6 +23,7 @@ def index(request):
 
 def win(request):
     template = loader.get_template('win.html')
+
     context = {
         'winners': 'Hello',
     }
