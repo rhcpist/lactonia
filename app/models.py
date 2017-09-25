@@ -25,6 +25,16 @@ class Codes(models.Model):
     def __str__(self):
         return self.code
 
+class Winners(models.Model):
+    user = models.ForeignKey('Users', null=True)
+    date_win = models.DateTimeField(default=timezone.now)
+    gift = models.IntegerField()
+
+    def __str__(self):
+        return self.user
+
+    def user_name(self):
+        return self.user
 
 class Users(models.Model):
     name = models.CharField(max_length=64)
@@ -44,3 +54,4 @@ class Users(models.Model):
 class Messages(models.Model):
     message = models.CharField(max_length=512)
     status = models.CharField(max_length=32, null=True)
+

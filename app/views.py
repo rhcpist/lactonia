@@ -93,7 +93,8 @@ def registration(request):
             userModel.code = codeObj
             userModel.status = Messages.objects.get(id__exact=2)
             #send sms
-            print(send_sms(str(userModel.phone_number)))
+            text_sms = 'Vitajemo, Vash kod uspishno zarejestrovano, chekajte na rozigrash. Detali: promo-lactonia.com.ua abo 0800210720'
+            print(send_sms(str(userModel.phone_number), text_sms))
 
             userModel.save()
 

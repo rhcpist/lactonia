@@ -33,8 +33,6 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'app.apps.AppConfig',
     'rangefilter',
-    'django_celery_results',
-    'django_celery_beat',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -84,11 +82,11 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'xxxxxxxxxx',
-        'USER': 'xxxxxxxxxx',
-        'PASSWORD': 'xxxxxxxxxx',
-        'HOST': 'xxxxxxxxxx',
-        'PORT': '5432',
+        'NAME': 'xxxxxxxxxxxxx',
+        'USER': 'xxxxxxxxxxxxx',
+        'PASSWORD': 'xxxxxxxxxxxxx',
+        'HOST': 'xxxxxxxxxxxxx',
+        'PORT': 'xxxxxxxxxxxxx',
     }
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -143,13 +141,11 @@ STATIC_URL = '/static/'
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_PASSWORD = 'xxxxxxxxxx' #my gmail password
-EMAIL_HOST_USER = 'xxxxxxxxxx' #my gmail username
+EMAIL_HOST_PASSWORD = 'xxxxxxxxxxxxx' #my gmail password
+EMAIL_HOST_USER = 'xxxxxxxxxxxxx' #my gmail username
 EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 CELERY_BROKER_URL = 'amqp://172.17.0.2:5672'
 CELERY_ENABLE_UTC = False
 CELERY_ACCEPT_CONTENT = ['json']
-CELERY_RESULT_BACKEND = 'django-db'
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'

@@ -1,8 +1,10 @@
 from __future__ import absolute_import, unicode_literals
-from datetime import timedelta
+from datetime import timedelta, datetime
 from celery import shared_task
 from celery import current_app as app
-from celery.schedules import crontab
+from .models import Users, Winners
+from django.core import serializers
+from django.db.models import Count
 import base64
 import http.client
 
@@ -23,6 +25,14 @@ def xsum(numbers):
     return sum(numbers)
 
 
+@app.on_after_finalize.connect
+def setup_periodic_tasks( sender, **kwargs ):
+    sender.add_periodic_task(
+        60,
+        cron_winners.s('test'),
+        name="test"
+    )
+
 # @app.on_after_finalize.connect
 # def setup_periodic_tasks(sender, **kwargs):
 #     # Calls test('hello') every 10 seconds.
@@ -32,18 +42,40 @@ def xsum(numbers):
 #         name = 'select winners',
 #     )
 
-@shared_task
-def select_winners(arg):
-    return arg
+@app.task
+def cron_winners(arg):
+    if datetime.now().hour == 18 and datetime.now().minute == 7 :
+        winners = select_winners()
+        return winners
+    else:
+        pass
 
 @shared_task
-def send_sms(number):
+def select_winners():
+    yesterday = datetime.now().replace(hour=0,minute=0,second=0,microsecond=0) - timedelta(days=1)
+    today = datetime.now().replace(hour=0,minute=0,second=0,microsecond=0)
+    users_all = Users.objects.filter(date_registration__range=(yesterday, today), status=2)
+    users_ids_repeated = users_all.values_list('id', flat=True).distinct('phone_number')
+    users_ids = Users.objects.filter(id__in=users_ids_repeated).order_by('?')
+    count = 0
+    for user in users_ids:
+        if count < 130:
+            winnersModel = Winners(user=user, gift=1)
+        else:
+            winnersModel = Winners(user=user, gift=0)
+        winnersModel.save()
+        count += 1
+    #data = serializers.serialize('json', users, fields=('id', 'phone_number', 'name', 'date_registration'))
+    return users_ids
+
+@shared_task
+def send_sms(number, text_sms):
     credential = base64.b64encode(b'Lactonia:UHJmf7648ldYb498V4')
     headers = {"Authorization": "Basic " + str(credential, 'utf-8'), "ContentType": "text/xml"}
     xml = """<message>
     	            <service id='single' source='Lactonia' />
     	            <to>""" + number + """</to>
-    	            <body content-type='text/plain'>Vitajemo, Vash kod uspishno zarejestrovano, chekajte na rozigrash. Detali: promo-lactonia.com.ua abo 0800210720</body>
+    	            <body content-type='text/plain'>""" + text_sms + """</body>
     	        </message>"""
     print(xml)
     conn = http.client.HTTPConnection("bulk.startmobile.ua")

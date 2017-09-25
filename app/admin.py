@@ -6,6 +6,7 @@ from rangefilter.filter import DateTimeRangeFilter
 from .models import Blocklist
 from .models import Codes
 from .models import Users
+from .models import Winners
 
 from django.conf.locale.en import formats as en_formats
 en_formats.DATETIME_FORMAT = "Y-m-d H:i:s"
@@ -43,5 +44,20 @@ class UsersAdmin(admin.ModelAdmin):
     # update actions list - adding export csv data
     actions = [export_users_data,]
 
+class WinnersAdmin(admin.ModelAdmin):
+
+    def user_phone(self, instance):
+        return instance.user.phone_number
+
+    def user_name(self, instance):
+        return instance.user.name
+
+    list_display = (('user_name', 'user_phone', 'date_win', 'gift'))
+    readonly_fields = ['user_name', 'user_phone', 'date_win', 'gift']
+    list_filter = (
+        ('date_win', DateTimeRangeFilter),
+    )
+
 admin.site.disable_action('delete_selected')
 admin.site.register(Users, UsersAdmin)
+admin.site.register(Winners, WinnersAdmin)
