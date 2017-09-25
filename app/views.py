@@ -17,6 +17,18 @@ from .models import Users
 from .models import Messages
 
 
+def format_phone(phone):
+    phone = re.sub(r'\D', '', phone)
+    if phone[0:3] == '380' and len(phone)==12:
+        return phone
+    elif phone[0:2] == '80' and len(phone)==11:
+        return '3'+phone
+    elif phone[0] == '0' and len(phone)==10:
+        return '38'+phone
+    else:
+        return False
+
+
 def index(request):
     return render(request, 'index.html', {'question': 'Hello'})
 
@@ -43,7 +55,9 @@ def registration(request):
 
         inputName = str(request.POST.get('inputname'))
         birthDate = str(request.POST.get('birthdate'))
-        phoneNumber = str(request.POST.get('phone'))
+        phoneNumber = format_phone(
+            str(request.POST.get('phone'))
+        )
         city = str(request.POST.get('city'))
         inputCode = str(request.POST.get('code'))
 

@@ -44,7 +44,7 @@ def setup_periodic_tasks( sender, **kwargs ):
 
 @app.task
 def cron_winners(arg):
-    if datetime.now().hour == 18 and datetime.now().minute == 7 :
+    if datetime.now().hour == 20 and datetime.now().minute == 24 :
         winners = select_winners()
         return winners
     else:
@@ -54,7 +54,7 @@ def cron_winners(arg):
 def select_winners():
     yesterday = datetime.now().replace(hour=0,minute=0,second=0,microsecond=0) - timedelta(days=1)
     today = datetime.now().replace(hour=0,minute=0,second=0,microsecond=0)
-    users_all = Users.objects.filter(date_registration__range=(yesterday, today), status=2)
+    users_all = Users.objects.filter(date_registration__range=(yesterday, today), status=2).exclude(phone_number='False')
     users_ids_repeated = users_all.values_list('id', flat=True).distinct('phone_number')
     users_ids = Users.objects.filter(id__in=users_ids_repeated).order_by('?')
     count = 0
