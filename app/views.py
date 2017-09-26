@@ -15,18 +15,23 @@ from .models import Blocklist
 from .models import Codes
 from .models import Users
 from .models import Messages
-
+from .models import Winners
 
 def format_phone(phone):
     phone = re.sub(r'\D', '', phone)
     if phone[0:3] == '380' and len(phone)==12:
-        return phone
+        operators = ["38050", "38066", "38095", "38099", "38039", "38067", "38068", "38096", "38097", "38098", "38063", "38073", "38091", "38092", "38093", "38094"]
+        if phone[0:5] in operators:
+            return phone
     elif phone[0:2] == '80' and len(phone)==11:
-        return '3'+phone
+        operators = ["8050", "8066", "8095", "8099", "8039", "8067", "8068", "8096", "8097", "8098", "8063", "8073", "8091", "8092", "8093", "8094"]
+        if phone[0:4] in operators:
+            return '3'+phone
     elif phone[0] == '0' and len(phone)==10:
-        return '38'+phone
-    else:
-        return False
+        operators = ["050", "066", "095", "099", "039", "067", "068", "096", "097", "098", "063", "073", "091", "092", "093", "094"]
+        if phone[0:3] in operators:
+            return '38'+phone
+    return False
 
 
 def index(request):
@@ -34,12 +39,11 @@ def index(request):
 
 
 def win(request):
-    template = loader.get_template('win.html')
-
-    context = {
-        'winners': 'Hello',
-    }
-    return HttpResponse(template.render(context, request))
+    #template = loader.get_template('win.html')
+    #winnersModel = Winners.objects.filter(date_win__lte=datetime.now()).order_by('date_win').values('date_win', 'user_id__phone_number', 'user_id__name')
+    #print(winnersModel)
+    winnersModel = 'Hello'
+    return render(request, 'win.html', {'winners': winnersModel})
 
 
 def rules(request):
@@ -51,75 +55,79 @@ def rules(request):
 
 
 def registration(request):
-    if request.method == "POST":
 
-        inputName = str(request.POST.get('inputname'))
-        birthDate = str(request.POST.get('birthdate'))
-        phoneNumber = format_phone(
-            str(request.POST.get('phone'))
-        )
-        city = str(request.POST.get('city'))
-        inputCode = str(request.POST.get('code'))
+    if request.method != "POST":
+        return render(request, 'registration.html', {'question': 'Hello'})
 
-        userModel = Users(
-            name=inputName,
-            birth_date=birthDate,
-            phone_number=phoneNumber,
-            city=city,
-            code=None,
-            status=None
-        )
-        #userModel.status = Messages.objects.get(id__exact=1)
+    inputName = str(request.POST.get('inputname'))
+    birthDate = str(request.POST.get('birthdate'))
+    phoneNumber = format_phone(
+        str(request.POST.get('phone'))
+    )
+    if phoneNumber == False:
+        return render(request, 'registration.html', {'question': 'Ви ввели невірний формат номера телефону, будь ласка, перевірте правильність написання.'})
+    city = str(request.POST.get('city'))
+    inputCode = str(request.POST.get('code'))
+
+    userModel = Users(
+        name=inputName,
+        birth_date=birthDate,
+        phone_number=phoneNumber,
+        city=city,
+        code=None,
+        status=None
+    )
+    #userModel.status = Messages.objects.get(id__exact=1)
+    userModel.save()
+
+    blockList = Blocklist(phone_number=phoneNumber, count=0)
+    blockList.user = userModel
+    try:
+        blockList = Blocklist.objects.get(phone_number__exact=phoneNumber)
+    except ObjectDoesNotExist:
+        pass
+
+    try:
+        if blockList.is_block == True and blockList.date_block <= datetime.now() - timedelta(days=1):
+            blockList.is_block = False
+            blockList.count = 0
+            blockList.save()
+
+        if blockList.is_block == True:
+
+            userModel.status = Messages.objects.get(id__exact=4)
+
+            userModel.save()
+            blockList.save()
+
+            return render(request, 'registration.html', {'question': 'Заблокованый'})
+
+    except ObjectDoesNotExist:
+        pass
+
+    try:
+        codeObj = Codes.objects.get(code__exact=inputCode, is_used__exact=False)
+
+        codeObj.is_used = True
+        codeObj.user = userModel
+        codeObj.save()
+
+        userModel.code = codeObj
+        userModel.status = Messages.objects.get(id__exact=2)
+
         userModel.save()
 
-        blockList = Blocklist(phone_number=phoneNumber, count=0)
-        blockList.user = userModel
-        try:
-            blockList = Blocklist.objects.get(phone_number__exact=phoneNumber)
-        except ObjectDoesNotExist:
-            pass
+        # send sms
+        text_sms = 'Vitajemo, Vash kod uspishno zarejestrovano, chekajte na rozigrash. Detali: promo-lactonia.com.ua abo 0800210720'
+        print(send_sms(number=str(userModel.phone_number), text_sms=text_sms))
 
-        try:
-            if blockList.is_block == True and blockList.date_block <= datetime.now() - timedelta(days=1):
-                blockList.is_block = False
-                blockList.count = 0
-                blockList.save()
-
-            if blockList.is_block == True:
-
-                userModel.status = Messages.objects.get(id__exact=4)
-
-                userModel.save()
-                blockList.save()
-
-                return render(request, 'registration.html', {'question': 'Заблокованый'})
-
-        except ObjectDoesNotExist:
-            pass
-
-        try:
-            codeObj = Codes.objects.get(code__exact=inputCode, is_used__exact=False)
-
-            codeObj.is_used = True
-            codeObj.user = userModel
-            codeObj.save()
-
-            userModel.code = codeObj
-            userModel.status = Messages.objects.get(id__exact=2)
-            #send sms
-            text_sms = 'Vitajemo, Vash kod uspishno zarejestrovano, chekajte na rozigrash. Detali: promo-lactonia.com.ua abo 0800210720'
-            print(send_sms(str(userModel.phone_number), text_sms))
-
-            userModel.save()
-
-        except ObjectDoesNotExist:
-            userModel.status = Messages.objects.get(id__exact=1)
-            userModel.save()
-            blockList.count = blockList.count + 1
-            if blockList.count > 4 : blockList.is_block = True
-            blockList.save()
-            return render(request, 'registration.html', {'question': 'Невирный код support@lactoria.ua'})
-
+    except ObjectDoesNotExist:
+        userModel.status = Messages.objects.get(id__exact=1)
+        userModel.save()
+        blockList.count = blockList.count + 1
+        if blockList.count > 4 : blockList.is_block = True
+        blockList.save()
+        return render(request, 'registration.html', {'question': 'Невирный код support@lactoria.ua'})
 
     return render(request, 'registration.html', {'question': 'Hello'})
 
@@ -129,8 +137,18 @@ def send_code(request):
     if request.method == "POST":
         inputCode = str(request.POST.get('code'))
         inputNumber = str(request.POST.get('number'))
-        formatedNum = re.findall('\d+', inputNumber)
-        formatedNum = ''.join(formatedNum)
+        formatedNum = format_phone(inputNumber)
+
+        if formatedNum == False:
+            return HttpResponse(
+                json.dumps(
+                    {
+                        "is_valid": False,
+                        "message": 'Ви ввели невірний формат номера телефону, будь ласка, перевірте правильність написання.'
+                    }
+                ),
+                content_type='application/json'
+            )
 
         blockObj = Blocklist(phone_number=formatedNum,count=0)
         try:

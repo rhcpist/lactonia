@@ -44,7 +44,7 @@ def setup_periodic_tasks( sender, **kwargs ):
 
 @app.task
 def cron_winners(arg):
-    if datetime.now().hour == 20 and datetime.now().minute == 24 :
+    if datetime.now().hour == 14 and datetime.now().minute == 33 :
         winners = select_winners()
         return winners
     else:
@@ -61,8 +61,12 @@ def select_winners():
     for user in users_ids:
         if count < 130:
             winnersModel = Winners(user=user, gift=1)
+            text_sms = 'Vitajemo, Vi staly peremozhcem v shhodennomu rozigrashi akcii\' \"Laktonija. Napovny zhyttja zdorov\'jam\". Vash rahunok bude popovneno protjagom 5 dniv.'
+            send_sms(user.phone_number, text_sms)
         else:
             winnersModel = Winners(user=user, gift=0)
+            text_sms = 'Vybachte, ale Vy ne staly peremozhcem v shhodennomu rozigrashi akcii\' \"Laktonija. Napovny zhyttja zdorov\'jam\". Prodovzhujte pryjmaty uchast\' i nehaj shhastyt\'.'
+            send_sms(user.phone_number, text_sms)
         winnersModel.save()
         count += 1
     #data = serializers.serialize('json', users, fields=('id', 'phone_number', 'name', 'date_registration'))
@@ -73,7 +77,7 @@ def send_sms(number, text_sms):
     credential = base64.b64encode(b'Lactonia:UHJmf7648ldYb498V4')
     headers = {"Authorization": "Basic " + str(credential, 'utf-8'), "ContentType": "text/xml"}
     xml = """<message>
-    	            <service id='single' source='Lactonia' />
+    	            <service id='single' source='TECT' />
     	            <to>""" + number + """</to>
     	            <body content-type='text/plain'>""" + text_sms + """</body>
     	        </message>"""
