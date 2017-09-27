@@ -82,11 +82,11 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'xxxxxxxxxxx',
-        'USER': 'xxxxxxxxxxx',
-        'PASSWORD': 'xxxxxxxxxxx',
-        'HOST': 'xxxxxxxxxxx',
-        'PORT': 'xxxxxxxxxxx',
+        'NAME': 'xxxxxxxxxx',
+        'USER': 'xxxxxxxxxx',
+        'PASSWORD': 'xxxxxxxxxx',
+        'HOST': 'xxxxxxxxxx',
+        'PORT': 'xxxxxxxxxx',
     }
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -141,11 +141,30 @@ STATIC_URL = '/static/'
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_PASSWORD = 'xxxxxxxxxxx'
-EMAIL_HOST_USER = 'xxxxxxxxxxx'
+EMAIL_HOST_PASSWORD = 'xxxxxxxxxx'
+EMAIL_HOST_USER = 'xxxxxxxxxx'
 EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 CELERY_BROKER_URL = 'amqp://172.17.0.2:5672'
 CELERY_ENABLE_UTC = False
 CELERY_ACCEPT_CONTENT = ['json']
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'app/logs/debug.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}

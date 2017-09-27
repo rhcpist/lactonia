@@ -39,10 +39,9 @@ def index(request):
 
 
 def win(request):
-    #template = loader.get_template('win.html')
-    #winnersModel = Winners.objects.filter(date_win__lte=datetime.now()).order_by('date_win').values('date_win', 'user_id__phone_number', 'user_id__name')
-    #print(winnersModel)
-    winnersModel = 'Hello'
+    winnersModel = Winners.objects.filter(date_win__lte=datetime.now(), gift__exact = 1).order_by('date_win').values('date_win', 'user_id__phone_number', 'user_id__name')
+    for winner in winnersModel:
+        winner['date_win'] = winner['date_win'].strftime('%Y-%m-%d')
     return render(request, 'win.html', {'winners': winnersModel})
 
 
